@@ -1,0 +1,59 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+<article class="article-title ">
+  <h1> Search </h1>
+  <form class="form-group" method="GET">
+    <div class="input-group">
+      <input name="results" value="{{request.GET.results}}" class="form-control mr-sm-2" type="search" placeholder="Search book title or author..." aria-label="Search">
+      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+    </div>
+  </form>
+</article>
+
+{% if init %}
+{% else %}
+<!-- Search form -->
+<div class="ui segment">Search results for "{{request.GET.results}}"...</div>
+{% for book in books %}
+	<article class="media content-section">
+	  <div class="account-img">
+      {% if '.' in book.image %}
+	    <img src="{{ book.image }}" width="105" height="150">
+      {% else %}
+	   	No Cover Image Found
+      {% endif %}
+	  </div>
+	  <div class="article-metadata">
+	  	  <h3><a class="article-title" href="../book/{{ book.id }}">{{ book.title }}</a></h3>
+	      <a class ="mr-2"><b>Author(s):</b></a>
+	      <a class="mr-2" href="../search/?results={{ book.authors }}"> {{ book.authors }}</a>
+	      <p class="article-content"><b>Description:</b> {{ book.desc|truncatechars:200 }}</p>	  
+	  </div>
+	</article>
+{% empty %}
+      <div class="ui segment">No results...</div>
+{% endfor %}
+{% endif %}
+
+{% if books.paginator.num_pages != 1 %}
+	{% if books.has_previous %}
+	  <a class="btn btn-outline-dark mb-4" href="?page=1&results={{ request.GET.results }}">First</a>
+	  <a class="btn btn-outline-dark mb-4" href="?page={{ books.previous_page_number }}&results={{ request.GET.results }}">Previous</a>
+	{% endif %}
+	{% for num in books.paginator.page_range %}
+	  {% if books.number == num %}
+	  	<a class="btn btn-dark mb-4" href="?page={{ num }}&results={{ request.GET.results }}">{{ num }}</a>
+	  {% elif num > books.number|add:'-3' and num < books.number|add:'3' %}
+	  	<a class="btn btn-outline-dark mb-4" href="?page={{ num }}&results={{ request.GET.results }}">{{ num }}</a>  
+	  {% endif %}
+	{% endfor %}
+	{% if books.has_next %}
+	  <a class="btn btn-outline-dark mb-4" href="?page={{ books.next_page_number }}&results={{ request.GET.results }}">Next</a>
+	  <a class="btn btn-outline-dark mb-4" href="?page={{ books.paginator.num_pages }}&results={{ request.GET.results }}">Last</a>
+	{% endif %}
+{% endif %}
+
+	
+{% endblock content %}

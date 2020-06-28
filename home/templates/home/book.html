@@ -1,0 +1,85 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <!-- BOOK DETAILS -->
+      <article class="article-title ">
+      </article>
+      {% for book in books %}
+        <title> Book Recommendation - {{ book.title }} </title>
+        <article class="media content-section">
+        <div class="w3-container">
+          <h1> {{book.title}} </h1>
+          <p class="article-content"><img src="{{ book.image }}" style="width:50%;"></p>
+          <p class="article-content"> <strong>Author(s):</strong> <a class="w3-button w3-light-grey" href="../../search/?results={{ book.authors }}"><i class="w3-margin-left fa fa-arrow-right">{{ book.authors }}</i></a></p>
+          <p class="article-content"> <strong>Genre(s):</strong> {{ book.genres }}</p>  
+          <p class="article-content"> <strong>Description:</strong> {{ book.desc}}</p>    
+          <p class="article-content"> <strong>Edition:</strong> {{ book.edition}}</p>   
+          <p class="article-content"> <strong>Format:</strong> {{ book.format}}</p>   
+          <p class="article-content"> <strong>ISBN:</strong> {{ book.isbn}}</p>   
+          <p class="article-content"> <strong>Pages:</strong> {{ book.pages}}</p>   
+          <p class="article-content"> <strong>Goodreads Rating:</strong> {{ book.rating }}</p>   
+          <p class="article-content"> <strong>Goodreads Rating Count:</strong> {{ book.rating_count }}</p>   
+          <p class="article-content"> <strong>Goodreads Review Count:</strong> {{ book.review_count }}</p>   
+        </article>
+
+        <article class="article-title">
+        <article class="article-metadata">
+        <h5> Other Books by {{book.authors}}: </h5>
+        </article>
+        </article>
+      {% endfor %}
+
+      <!-- BOOK AUTHOR RECOMMENDATIONS -->
+      {% for book in recommendations %}
+        <article class="media content-section">
+          <div class="account-img">
+            {% if '.' in book.image %}
+            <img src="{{ book.image }}" width="105" height="150">
+            {% else %}
+            No Cover Image Found
+            {% endif %}
+          </div>
+          <div class="article-metadata">
+              <h3><a class="article-title" href="../../book/{{ book.id }}">{{ book.title }}</a></h3>
+              <a class ="font-weight-bold"> Author(s): </a>
+              <a class="mr-2" href="../../search/?results={{ book.authors }}"> {{ book.authors }}</a>
+              <p class="article-content"><a class ="font-weight-bold"> Description: </a>{{ book.desc|truncatechars:200 }}</p>   
+          </div>
+        </article>
+      {% empty %}
+            <div class="ui segment">No results...</div>
+      {% endfor %}
+
+    </div>    
+    <div class="col-md-3">
+
+      <!-- BOOK GENRES RECOMMENDATIONS -->
+      <article class="article-metadata">
+      <h8> Similar Genres:</h8>
+      </article>
+      {% for book in genres %}
+        <article class="article-metadata">
+          <h6><a class="article-title" href="../../book/{{ book.id }}">{{ book.title }}</a></h6>
+          {% if '.' in book.image %}
+          <img src="{{ book.image }}" width="105" height="150">
+          {% else %}
+          No Cover Image Found
+          {% endif %}
+          <article class="article-metadata">
+          <u>Author(s):</u>
+          <a class="mr-2" href="../../search/?results={{ book.authors }}"> {{ book.authors }}</a>
+          <p class="article-content"><u>Genres:</u> {{ book.genres }}</p>
+        </article>
+      {% empty %}
+            <div class="ui segment">No results...</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

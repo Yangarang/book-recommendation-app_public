@@ -1,0 +1,17 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+	<article class="media content-section">
+	  <div class="article-metadata">
+	  <h1>About</h1>
+	  <p class="article-content">Created by Jonathan Yang (jy1045) for CS6513 Big Data</p>
+	  <p class="article-content">Goodreads is the staple website for book lovers who are searching, rating, and discussing everything about books. The site is geared towards users listing what books they’ve read and has its own recommendation feature buried within their site as well. However, the challenge of Goodreads is that it is geared towards making reading more social by providing personal goals for what books to read next, different featured lists of books, and providing a community for discussion groups. Our site proposed will have a greater focus determining similarity between books for the best recommendation with an easier interface for users to easily move onto the next title.</p>
+	  <p class="article-content">This web application is leveraging Django web framework in Python, MySQL, and is hosted on Amazon's AWS MySQL RDS and Linux instance. Multithreaded data retrievals are called on the "Book Details" pages, which calls the "Other books by Authors" and "Similar Genres" all with 3 separate threads running parallel. </p>
+	  <p class="article-content">Goodreads data used on this site can be found at: https://www.kaggle.com/meetnaren/goodreads-best-books</p>	 
+	  <p class="article-content">This page last updated 6-26-2020</p>	 
+	 	 	 
+	  </div>
+
+	</article>
+{% endblock content %}
+

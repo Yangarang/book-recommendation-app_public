@@ -1,0 +1,46 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+<article class="article-title ">
+  <h1> Critically Acclaimed Books </h1>
+</article>
+
+{% for book in books %}
+	<article class="media content-section">
+	  <div class="account-img">
+      {% if '.' in book.image %}
+	    <img src="{{ book.image }}" width="105" height="150">
+      {% else %}
+	   	No Cover Image Found
+      {% endif %}
+	  </div>
+	  <div class="article-metadata">  
+	  	  <h3><a class="article-title" href="book/{{ book.id }}">{{ book.title }}</a></h3>
+	      <a class="article-content"> <strong> GoodReads Rating: </strong> {{ book.rating }}</a>
+	      <br>
+	      <a class="article-content"> <strong> GoodReads Number of Ratings: </strong> {{ book.rating_count }}</a>
+	      <br>
+	      <a class ="font-weight-bold"> Author(s): </a>
+	      <a class="mr-2" href="../search/?results={{ book.authors }}"> {{ book.authors }}</a>
+	      <p class="article-content"> <strong> Description: </strong> {{ book.desc|truncatechars:200 }}</p>	  
+	  </div>
+	</article>
+{% endfor %}
+
+{% if books.has_previous %}
+  <a class="btn btn-outline-dark mb-4" href="?page=1">First</a>
+  <a class="btn btn-outline-dark mb-4" href="?page={{ books.previous_page_number }}">Previous</a>
+{% endif %}
+{% for num in books.paginator.page_range %}
+  {% if books.number == num %}
+  	<a class="btn btn-dark mb-4" href="?page={{ num }}">{{ num }}</a>
+  {% elif num > books.number|add:'-3' and num < books.number|add:'3' %}
+  	<a class="btn btn-outline-dark mb-4" href="?page={{ num }}">{{ num }}</a>  
+  {% endif %}
+{% endfor %}
+{% if books.has_next %}
+  <a class="btn btn-outline-dark mb-4" href="?page={{ books.next_page_number }}">Next</a>
+  <a class="btn btn-outline-dark mb-4" href="?page={{ books.paginator.num_pages }}">Last</a>
+{% endif %}
+
+{% endblock content %}
