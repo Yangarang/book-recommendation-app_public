@@ -3,14 +3,15 @@
 {% block content %}
 
 <article class="article-title ">
-  <h1> Search </h1>
+  <h1> NLP Search </h1>
   <form class="form-group" method="GET">
     <div class="input-group">
-      <input name="results" value="{{request.GET.results}}" class="form-control mr-sm-2" type="search" placeholder="Search book title or author..." aria-label="Search">
-      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+      <input name="results" value="{{request.GET.results}}" class="form-control mr-sm-2" type="search" placeholder="Search based on book descriptions..." aria-label="Search">
+      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">NLP Search</button>
     </div>
   </form>
 </article>
+
 
 {% if init %}
 {% else %}
@@ -26,7 +27,7 @@
       {% endif %}
 	  </div>
 	  <div class="article-metadata">
-	  	  <h3><a class="article-title" href="../book/{{ book.id }}">{{ book.title }}</a></h3>
+	  	  <h3><a class="article-title" href="../nlpbook/{{ book.id }}">{{ book.title }}</a></h3>
 	      <a class ="mr-2"><b>Author(s):</b></a>
 	      <a class="mr-2" href="../search/?results={{ book.authors }}"> {{ book.authors }}</a>
 	      <p class="article-content"><b>Description:</b> {{ book.desc|truncatechars:200 }}</p>	  

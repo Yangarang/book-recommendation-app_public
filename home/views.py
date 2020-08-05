@@ -6,7 +6,6 @@ from django.core.paginator import Paginator
 from .models import get_books_homepage, get_book_details
 from .models import	get_search_results, get_same_author_books, get_same_genre_books, get_nlpsearch_results
 from .nlp_bookdata import get_nlpbook_recommendations
-
 import time
 
 # Create your views here.

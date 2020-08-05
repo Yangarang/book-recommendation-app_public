@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***REMOVED***'
+SECRET_KEY = '()+ut-yz*%0bi0+-7#_5lql(_l+@va&50%cq4s1trt+*$_oaej'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'book_db',
         'USER': 'admin',
-        'PASSWORD':'***REMOVED***',
+        'PASSWORD':'jy1045123',
         'HOST':'book-database-1.cmmzkhfp8kbf.us-east-2.rds.amazonaws.com',
         'PORT':'3306',
     }    
@@ -97,7 +97,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'book_db',
     #     'USER': 'root',
-    #     'PASSWORD':'***REMOVED***',
+    #     'PASSWORD':'Mangex21!',
     #     'HOST':'localhost',
     #     'PORT':'3306',
     # }    
