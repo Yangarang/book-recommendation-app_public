@@ -15,6 +15,10 @@ import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer,WordNetLemmatizer
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 
 # Return all rows from a cursor as a namedtuple
 def namedtuplefetchall(cursor):
@@ -72,7 +76,7 @@ def get_nlpbook_recommendations(**kwargs):
 	""" % (pk))
 	df_train2 = pd.read_sql(sqlquery, connection)
 
-	# combing query outputs to one dataframe
+	# combining query outputs to one dataframe
 	frames = [df_train1, df_train2]
 	df_train = pd.concat(frames)
 
@@ -87,42 +91,35 @@ def get_nlpbook_recommendations(**kwargs):
 	#Using data structure with lambda
 	df_train['unique_words'] = df_train['book_desc'].apply(lambda x: set(tok.lower() for tok in x.split(' ')))
 
-	nltk.download('punkt')
-	nltk.download('stopwords')
-	nltk.download('wordnet')
-
 	#stopwords = ['a','and','the','is','have','with','of','it','an','to','their','.','on',',','']
 	stop_words = set(stopwords.words('english'))
 
-	def remove_stopwords(text):
-	    
+	def remove_stopwords(text):	    
 	    clean_text = OrderedSet()
 	    for i in text:
 	      i = re.sub('\W','',i)
 	      if(i not in stop_words):
-	          clean_text.add(i)
-	            
+	          clean_text.add(i)	            
 	    return clean_text
 
 	df_train['Stopwords_Free'] = df_train['unique_words'].apply(lambda x: remove_stopwords(x))
-	df_train.head(10)
 
-	#Type conversion from ordered set to string dtype
+	#Type conversion from ordered set to string type
 	df_train['Stopwords_Free'] = df_train['Stopwords_Free'].apply(lambda x: ','.join(x))
 	df_modified = df_train.groupby('book_id')['Stopwords_Free'].apply(','.join).reset_index()
 	df_modified.sort_values('book_id',ascending=False,inplace=True)
 
+	#ad and set stopwards
 	stop_words = set(stopwords.words('english'))
 	lemmatizer = WordNetLemmatizer()
 	ps = PorterStemmer()
 
+	#clean out stemming and lemmatizer words
 	def clean_more(x):  
 	    stemming_words = ['ing','ingly','ion','ly','es','s','er','ee','ed','up']
 	    words = OrderedSet()
 	    for i in x.split(','):
 	        w = re.sub('\W','',i)
-
-	        #lemmatizing
 	        w = lemmatizer.lemmatize(w,pos='v')        
 	        for st in stemming_words:
 	          if(w.endswith(st)):
@@ -144,39 +141,29 @@ def get_nlpbook_recommendations(**kwargs):
 	            word_vec[words] = start_marker
 	            start_marker +=1
 
+	# get vectors of stop words created
 	def getVectors(x):
 	    vec = []
 	    for w in x.split(','):
 	        vec.append(word_vec[w])	        
 	    return vec
-
-
 	def getVectorsBinary(x):	    
 	    vec = [0]*len(word_vec)
 	    for w in x.split(','):
 	        vec[word_vec[w]] = 1	        
 	    return vec
 
+	# add vectors and binary vectors to output dataframe
 	df_modified['vectors'] = df_modified['clean_words'].apply(lambda x: getVectors(x))
 	df_modified['binary_vectors'] = df_modified['clean_words'].apply(lambda x: getVectorsBinary(x))
 
 	#See the difference
 	len(df_modified['vectors'].iloc[0]),len(df_modified['binary_vectors'].iloc[0])
-
 	sub = df_modified[['book_id','binary_vectors']]
 	sub.reset_index(drop=True,inplace=True)
 	vectors = sub.loc[:,:]['binary_vectors'].to_list()
 
-	# Cosine Similarity
-	# 
-	# It is measure to check how two vectors are related to in high dimension space
-	# The formula for measuring the cosine score 
-	# two vectors = a,b
-	# cos_score = (a.b)/(|a|.|b|)
-	# 
-	# 0 <= score <= 1
-	# higher the score smaller the angle and they will be oriented in space close to each other
-
+	#set up output vectors
 	book_id = pk
 	scores = []
 	vec_a = sub.loc[sub['book_id'] == book_id]['binary_vectors'].to_list()
@@ -193,12 +180,7 @@ def get_nlpbook_recommendations(**kwargs):
 		if (cos_sim > 0 and sub['book_id'].loc[index] != pk and cos_sim != 1):
 			dict_output[str(sub['book_id'].loc[index])] = cos_sim[0]
 
-		#print('book_id {} is similar to book_id {} with similarity score of {}'.format(sub['book_id'].loc[index],pk,cos_sim))
-
-	#sort dictionary
-	#print(dict_output)
 	dict_output = OrderedDict(sorted(dict_output.items(), key=lambda x: x[1], reverse=True))
-	#print(dict_output)
 
 	# setup final output
 	dict_result_final = []
